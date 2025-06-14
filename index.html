@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Trắc nghiệm Internet Vạn Vật">
+    <meta name="author" content="Your Name">
+    <title>Trắc nghiệm Internet Vạn Vật</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        .main-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+        }
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .toc-container {
+                width: 100%;
+            }
+            .section-btn {
+                font-size: 14px;
+                padding: 6px 10px;
+            }
+        }
+        .quiz-container-wrapper {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .dark-mode .quiz-container-wrapper {
+            background: #2c2c2c;
+            box-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .dark-mode h1 {
+            color: #ffffff;
+        }
+        .sections {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .section-btn {
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .section-btn:hover {
+            background-color: #2980b9;
+        }
+        .section-btn.active {
+            background-color: #2c3e50;
+        }
+        .dark-mode .section-btn {
+            background-color: #4a90e2;
+        }
+        .dark-mode .section-btn:hover {
+            background-color: #357abd;
+        }
+        .dark-mode .section-btn.active {
+            background-color: #3a506b;
+        }
+        .quiz-container {
+            display: none;
+        }
+        .quiz-container.active {
+            display: block;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        .dark-mode .question {
+            background-color: #333333;
+            border-left-color: #4a90e2;
+        }
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .option:hover {
+            background-color: #e8f4fc;
+        }
+        .dark-mode .option:hover {
+            background-color: #444444;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        .dark-mode .correct {
+            background-color: #2e7d32;
+            border-left-color: #4caf50;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        .dark-mode .incorrect {
+            background-color: #d32f2f;
+            border-left-color: #f44336;
+        }
+        .show-answer {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+            margin-top: 5px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .dark-mode .show-answer {
+            background-color: #2e7d32;
+            border-left-color: #4caf50;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .nav-btn {
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .dark-mode .nav-btn {
+            background-color: #4a90e2;
+        }
+        .nav-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        .dark-mode .nav-btn:disabled {
+            background-color: #616161;
+        }
+        .progress {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .dark-mode .progress {
+            color: #e0e0e0;
+        }
+        .toc-container {
+            width: 300px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .dark-mode .toc-container {
+            background: #2c2c2c;
+            box-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+        .toc-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .dark-mode .toc-title {
+            color: #ffffff;
+        }
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 2px;
+        }
+        .toc-item {
+            padding: 5px;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #ddd;
+        }
+        .dark-mode .toc-item {
+            background-color: #555555;
+        }
+        .toc-item.green {
+            background-color: #28a745;
+            color: white;
+        }
+        .toc-item.red {
+            background-color: #dc3545;
+            color: white;
+        }
+        .toc-item.blue {
+            background-color: #3498db;
+            color: white;
+        }
+        .toc-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .toc-nav button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .toc-nav .prev {
+            background-color: #3498db;
+            color: white;
+        }
+        .dark-mode .toc-nav .prev {
+            background-color: #4a90e2;
+        }
+        .toc-nav .next {
+            background-color: #3498db;
+            color: white;
+        }
+        .dark-mode .toc-nav .next {
+            background-color: #4a90e2;
+        }
+        .additional-controls {
+            margin: 20px 0;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .dark-mode-toggle, .submit-btn, .mute-btn, .retry-wrong-btn {
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .dark-mode .dark-mode-toggle, .dark-mode .submit-btn, .dark-mode .mute-btn, .dark-mode .retry-wrong-btn {
+            background-color: #4a90e2;
+        }
+        .dark-mode-toggle:hover, .submit-btn:hover, .mute-btn:hover, .retry-wrong-btn:hover {
+            background-color: #2980b9;
+        }
+        .dark-mode .dark-mode-toggle:hover, .dark-mode .submit-btn:hover, .dark-mode .mute-btn:hover, .dark-mode .retry-wrong-btn:hover {
+            background-color: #357abd;
+        }
+        .timer-score-container {
+            margin-top: 20px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .dark-mode .timer-score-container {
+            background: #2c2c2c;
+            box-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+        .timer-score-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+        .dark-mode .timer-score-title {
+            color: #ffffff;
+        }
+        .timer, .score {
+            font-size: 1.1em;
+            margin: 5px 0;
+            color: #3498db;
+        }
+        .dark-mode .timer, .dark-mode .score {
+            color: #ffffff;
+        }
+        .retry-wrong-container {
+            margin-top: 15px;
+            text-align: center;
+        }
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        .dark-mode .modal-content {
+            background-color: #2c2c2c;
+            color: #e0e0e0;
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #333;
+        }
+        .dark-mode .close {
+            color: #e0e0e0;
+        }
+        .close:hover {
+            color: #dc3545;
+        }
+        .modal-content h2 {
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+        .dark-mode .modal-content h2 {
+            color: #4caf50;
+        }
+        .modal-content p {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        .modal-btn {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .dark-mode .modal-btn {
+            background-color: #4a90e2;
+        }
+        .modal-btn:hover {
+            background-color: #2980b9;
+        }
+        .dark-mode .modal-btn:hover {
+            background-color: #357abd;
+        }
+        /* Disabled option style */
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        body {
+            background: url('image/background-iot.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(255,255,255,0.6); /* Lớp mờ trắng 60% */
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Modal Chúc mừng -->
+    <div id="congrats-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span id="close-modal" class="close">×</span>
+            <h2>🎉 Chúc mừng bạn đã hoàn thành bài! 🎉</h2>
+            <p>Bạn đã trả lời tất cả các câu hỏi trong bài thi <strong>Internet Vạn Vật</strong>.</p>
+            <p>Điểm của bạn: <span id="final-score">Chưa nộp bài</span></p>
+            <p>Thời gian hoàn thành: <span id="final-time">00:00:00</span></p>
+            <button id="review-btn" class="modal-btn">Xem lại bài làm</button>
+            <button id="restart-btn" class="modal-btn">Làm lại bài thi</button>
+        </div>
+    </div>
+    <div class="main-container">
+        <div class="quiz-container-wrapper">
+            <h1>TRẮC NGHIỆM INTERNET VẠN VẬT</h1>
+            <div class="sections">
+                <!-- Các nút phần thi sẽ được thêm bằng JavaScript -->
+            </div>
+            <div class="progress">
+                <!-- Loại bỏ "Câu <span id="current-question">1</span>/<span id="total-questions">0</span>" -->
+            </div>
+            <div class="quiz-container" id="quiz-container">
+                <!-- Nội dung câu hỏi sẽ được thêm bằng JavaScript -->
+            </div>
+            <div class="navigation">
+                <button class="nav-btn" id="prev-btn" disabled>Câu trước</button>
+                <button class="nav-btn" id="next-btn">Câu tiếp</button>
+            </div>
+            <div class="progress" style="max-width: 400px; margin: auto;">
+                <div style="margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                    <span>Tiến độ hoàn thành: <span id="completed-count">0</span>/<span id="total-questions">0</span></span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div style="background-color: #dee3f0; height: 8px; border-radius: 10px; overflow: hidden;">
+                    <div id="progress-bar" style="height: 100%; width: 0%; background-color: #3b82f6;"></div>
+                </div>
+                <div style="margin-top: 6px">
+                    Đúng: <span id="correct-count" style="color: #28a745;">0</span>
+                      Sai: <span id="incorrect-count" style="color: #dc3545;">0</span>
+                </div>
+            </div>
+            <div class="additional-controls">
+                <label><input type="checkbox" id="shuffle-answers"> Đảo đáp án</label>
+                <label><input type="checkbox" id="shuffle-questions"> Đảo câu hỏi</label>
+                <button id="reload-btn" class="nav-btn">Tải lại phần thi</button>
+                <button id="dark-mode-toggle" class="dark-mode-toggle">Bật Dark Mode</button>
+                <button id="submit-btn" class="submit-btn">Hoàn thành bài thi</button>
+                <button id="mute-btn" class="mute-btn">Tắt tiếng</button>
+            </div>
+            <!-- Audio elements for correct and incorrect answers -->
+            <audio id="correct-sound" src="Sound/correct.mp3"></audio>
+            <audio id="incorrect-sound" src="Sound/incorrect_sound.ogg"></audio>
+        </div>
+        <div class="toc-container">
+            <div class="toc-title">Mục lục câu hỏi</div>
+            <div class="toc" id="toc"></div>
+            <div class="toc-nav">
+                <button class="prev" id="toc-prev">Trước</button>
+                <button class="next" id="toc-next">Sau</button>
+            </div>
+            <div class="retry-wrong-container">
+                <button id="retry-wrong-btn" class="retry-wrong-btn">Làm lại câu sai</button>
+            </div>
+            <div class="timer-score-container">
+                <div class="timer-score-title">Thông tin bài làm</div>
+                <div class="timer" id="timer">Thời gian: 00:00:00</div>
+                <div class="score" id="score">Điểm: Chưa nộp bài</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Dữ liệu câu hỏi được tổ chức theo sections
+        const quizData = {
+            "Phần 1(60 Câu)": [
+    {
+    question: "Câu 1: IoT tiến hóa từ sự hội tụ của các công nghệ nào?",
+    options: [
+        "A. Công nghệ không dây , hệ thống vi cơ điện tử và Internet",
+        "B. Điện toán di động, dữ liệu lớn và internet",
+        "C. Công nghệ không dây, trí tuệ nhân tạo và dữ liệu lớn",
+        "D. Cảm biến, điện toán đám mây và công  nghệ máy học"
+    ],
+    answer: "A. Công nghệ không dây , hệ thống vi cơ điện tử và Internet"
+    },
+    {
+        question: "Câu 2: IoT phải có 2 thuộc tính nào sau đây?",
+        options: [
+            "A. Phải có là ứng dụng internet và lấy được thông tin vật chủ",
+            "B. Phải có cảm biến và kết nối bluetooth",
+            "C. Phải có trao đổi dữ liệu và phân tích hệ thống",
+            "D. Không có câu trả lời nào đúng"
+        ],
+        answer: "A. Phải có là ứng dụng internet và lấy được thông tin vật chủ"
+    },
+    {
+        question: "Câu 3: Người được gọi là chả đẻ của IoT là ai?",
+        options: [
+            "A. Kevin Ashton",
+            "B. Vinton Gray Cerf",
+            "C. Satoshi Nakamoto",
+            "D. Hal Finney"
+        ],
+        answer: "A. Kevin Ashton"
+    },
+    {
+        question: "Câu 4: Các công nghệ nào được sử dụng trong Iot",
+        options: [
+            "A. RFID",
+            "B. Bluetooth",
+            "C. Wifi",
+            "D. Tất cả"
+        ],
+        answer: "D. Tất cả"
+    },
+    {
+        question: "Câu 5: Các thiết bị IoT trong nhà giúp ích trong việc nào sau đây?",
+        options: [
+            "A. Tự động hóa",
+            "B. Tiết kiệm năng lượng",
+            "C. An toàn và bảo mật",
+            "D. Tất cả các câu trả lời là chính xác"
+        ],
+        answer: "D. Tất cả các câu trả lời là chính xác"
+    },
+    {
+        question: "Câu 6: Một số tính năng mà ô tô thông minh có thể cung cấp là gì?",
+        options: [
+            "A. Xác định vị trí các điểm đỗ xe có sẵn",
+            "B. Gọi dịch vụ khẩn cấp trong trường hợp xảy ra tai nạn",
+            "C. Tự lái xe",
+            "D. Tất cả các tùy chọn đều đúng"
+        ],
+        answer: "D. Tất cả các tùy chọn đều đúng"
+    },
+    {
+        question: "Câu 7: Giao thông công cộng được hưởng lợi như thế nào từ internet vạn vật?",
+        options: [
+            "A. Thông tin từ các thiết bị được kết nối với nhau được sử dụng để cải thiện chất lượng và bảo mật",
+            "B. Nếu tất cả ô tô cá nhân đều có IoT, thì phương tiện giao thông công cộng không còn cần thiết nữa",
+            "C. IoT làm giảm nhu cầu giao thông công cộng trong giờ cao điểm",
+            "D. Thông tin từ các thiết bị được kết nối với nhau được sử dụng để cung cấp dịch vụ được cá nhân hóa"
+        ],
+        answer: "A. Thông tin từ các thiết bị được kết nối với nhau được sử dụng để cải thiện chất lượng và bảo mật"
+    },
+    {
+        question: "Câu 8: Trong ý tưởng về thiết bị di động, điểm hấp dẫn chính của máy tính xách tay khiến nó trở thành thiết bị phổ biến là gì?",
+        options: [
+            "A. Máy tính xách tay có chức năng máy tính để bàn có thể mang đi mọi nơi",
+            "B. Chi phí của máy tính xách tay thấp hơn máy tính để bàn",
+            "C. Máy tính xách tay hiệu quả hơn máy tính để bàn",
+            "D. Không câu trả lời nào trong số này đúng"
+        ],
+        answer: "A. Máy tính xách tay có chức năng máy tính để bàn có thể mang đi mọi nơi"
+    },
+    {
+        question: "Câu 9: Phần cứng của Iot thu thập dữ liệu thông qua việc sử dụng ?",
+        options: [
+            "A. Khúc xạ ánh sáng",
+            "B. Thiết bị Giám sát",
+            "C. Thiết bị truyền động",
+            "D. Cảm biến"
+        ],
+        answer: "D. Cảm biến"
+    },
+    {
+        question: "Câu 10: Thách thức nào giữa thiết bị IoT với các thiết bị thông minh hoặc thiết bị được kết nối?",
+        options: [
+            "A. Giá trị mà chúng mang lại",
+            "B. Chi phí đầu tư",
+            "C. Các cách chúng được sử dụng",
+            "D. Tất cả các ý đều đúng"
+        ],
+        answer: "A. Giá trị mà chúng mang lại"
+    },
+    {
+        question: "Câu 11: IOT là viết tắt?",
+        options: [
+            "A. Internet of Things",
+            "B. Internet of Think",
+            "C. Internet of Technology",
+            "D. Intelligent of Technology"
+        ],
+        answer: "A. Internet of Things"
+    },
+    {
+        question: "Câu 12: Tuyên bố nào phù hợp nhất với Internet of Things?",
+        options: [
+            "A. Internet of Things bao gồm hàng tỷ thiết bị trên khắp thế giới được kết nối với internet",
+            "B. Internet of Things nhằm mục đích xây dựng phần mềm đáng tin cậy",
+            "C. Internet of Things nhằm kết nối con người và vạn vật",
+            "D. Không có tuyên bố nào phù hợp"
+        ],
+        answer: "A. Internet of Things bao gồm hàng tỷ thiết bị trên khắp thế giới được kết nối với internet"
+    },
+    {
+        question: "Câu 13: Các thiết bị IoT phải được cập nhật khi nào?",
+        options: [
+            "A. 1 tuần cập nhật 1 lần",
+            "B. 1 ngày cập nhật 1 lần",
+            "C. 1 tháng cập nhật 1 lần",
+            "D. Phải luôn được cập nhật"
+        ],
+        answer: "D. Phải luôn được cập nhật"
+    },
+    {
+        question: "Câu 14: Một thiết bị nhận thông tin từ nhiều điểm trên mạng và truyền nó đến một mạng khác là gì?",
+        options: [
+            "A. Cảm biến",
+            "B. Máy với Máy (M2M)",
+            "C. Dữ liệu lớn",
+            "D. Thiết bị đeo tay"
+        ],
+        answer: "A. Cảm biến"
+    },
+    {
+        question: "Câu 15: Nền tảng Internet of Things?",
+        options: [
+            "A. Cho phép các thiết bị và ứng dụng giao tiếp với nhau",
+            "B. Cung cấp các dịch vụ để truy cập, sử dụng hoặc tham gia vào Internet",
+            "C. Cho phép các cá nhân và tổ chức làm cho trang web của họ có thể truy cập được",
+            "D. Không có phát biểu đúng"
+        ],
+        answer: "A. Cho phép các thiết bị và ứng dụng giao tiếp với nhau"
+    },
+    {
+        question: "Câu 16: Ai đặt ra thuật ngữ IoT?",
+        options: [
+            "A. Kevin Ashton",
+            "B. IBM",
+            "C. Ross Ihaka",
+            "D. Guido van Rossum"
+        ],
+        answer: "A. Kevin Ashton"
+    },
+    {
+        question: "Câu 17: Thuật ngữ IoT được đặt ra vào năm nào?",
+        options: [
+            "A. 1999",
+            "B. 2000",
+            "C. 2001",
+            "D. 1998"
+        ],
+        answer: "A. 1999"
+    },
+    {
+        question: "Câu 18: Thuật ngữ IIoT là viết tắt của những chữ nào?",
+        options: [
+            "A. Industrial Internet of Things",
+            "B. Index Internet of Technology",
+            "C. Intense Internet of Things",
+            "D. Incorporate Internet  of Technology"
+        ],
+        answer: "A. Industrial Internet of Things"
+    },
+    {
+        question: "Câu 19: Thành phần nào sau đây không phải là thành phần cơ bản của hệ thống IoT?",
+        options: [
+            "A. Máy biến áp",
+            "B. Cảm biến",
+            "C. Giao diện người dùng",
+            "D. Kết nối và xử lý dữ liệu"
+        ],
+        answer: "A. Máy biến áp"
+    },
+    {
+        question: "Câu 20: Giao thức MQTT là viết tắt của những chữ nào?",
+        options: [
+            "A. Message Query Telemetry Transport",
+            "B. MetaQuery Telemetry Transport",
+            "C. Multiple Query Telemetry Transport",
+            "D. Multi-Queue Query Telemetry Transport"
+        ],
+        answer: "A. Message Query Telemetry Transport"
+    },
+    {
+        question: "Câu 21: DHCP sử dụng giao thức lớp vận chuyển nào?",
+        options: [
+            "A. UDP",
+            "B. TCP",
+            "C. RSVP",
+            "D. DCCP"
+        ],
+        answer: "A. UDP"
+    },
+    {
+        question: "Câu 22: Thiết bị nào không phải thiết bị mạng?",
+        options: [
+            "A. Traffic analyzer",
+            "B. Bridge",
+            "C. Switch",
+            "D. Router"
+        ],
+        answer: "A. Traffic analyzer"
+    },
+    {
+        question: "Câu 23: Arduino UNO là gì?",
+        options: [
+            "A. Protocol",
+            "B. Network",
+            "C. Software",
+            "D. Hardware device"
+        ],
+        answer: "D. Hardware device"
+    },
+    {
+        question: "Câu 24: Thiết bị IoT nào dùng để thu thập dữ liệu từ thế giới thực?",
+        options: [
+            "A. Sensors",
+            "B. Actuators",
+            "C. Microprocessors",
+            "D. Microcontrollers"
+        ],
+        answer: "A. Sensors"
+    },
+    {
+        question: "Câu 25: Thành phần của hệ thống IoT thực thi một chương trình là gì?",
+        options: [
+            "A. Cảm biến",
+            "B. Bộ chuyển đổi kỹ thuật số sang tương tự",
+            "C. Bộ truyền động",
+            "D. Bộ vi điều khiển"
+        ],
+        answer: "D. Bộ vi điều khiển"
+    },
+    {
+        question: "Câu 26: Thiết bị nào sau đây không thể được coi là thiết bị IoT?",
+        options: [
+            "A. Đồng hồ thông minh",
+            "B. Điện thoại Android",
+            "C. Máy tính xách tay",
+            "D. Đèn huỳnh quang"
+        ],
+        answer: "D. Đèn huỳnh quang"
+    },
+    {
+        question: "Câu 27: Mạng nào sau đây không phải là mạng không dây tầm ngắn?",
+        options: [
+            "A. VPN",
+            "B. Wifi",
+            "C. Bluetooth",
+            "D. Điểm phát sóng"
+        ],
+        answer: "A. VPN"
+    },
+    {
+        question: "Câu 28: Thông số kỹ thuật quan trọng của cảm biến hình ảnh?",
+        options: [
+            "A. Độ phân giải, kích thước điểm ảnh",
+            "B. Độ nhạy sáng, tốc độ phản hồi",
+            "C. Độ lệch màu",
+            "D. Tất cả phương án"
+        ],
+        answer: "D. Tất cả phương án"
+    },
+    {
+        question: "Câu 29: Phân loại cảm biến hình ảnh dựa trên tiêu chí nào?",
+        options: [
+            "A. Công nghệ sản xuất chip",
+            "B. Kích thước và độ phân giải",
+            "C. Ứng dụng",
+            "D. Tất cả phương án"
+        ],
+        answer: "D. Tất cả phương án"
+    },
+    {
+        question: "Câu 30: Trong các thành phần liên kết trong IoT, thành phần nào nằm ở giữa sơ đồ biểu diễn IoT?",
+        options: [
+            "A. Định danh",
+            "B. Cảm biến",
+            "C. Kết nối",
+            "D. Đối tượng"
+        ],
+        answer: "D. Đối tượng"
+    },
+    {
+        question: "Câu 31: Bốn lĩnh vực công nghệ chính luôn gắn liền với sự phát triển xu thế IoT, chọn phương án đúng nhất?",
+        options: [
+            "A. Phần cứng, truyền thông kết nối, phần mềm, ứng dụng",
+            "B. Phần cứng, phần mềm, thương mại, năng lượng",
+            "C. Phần cứng, phần mềm, dữ liệu lớn, internet",
+            "D. Phần mềm, internet, mã hóa, dữ liệu"
+        ],
+        answer: "A. Phần cứng, truyền thông kết nối, phần mềm, ứng dụng"
+    },
+    {
+        question: "Câu 32: Giao nào là thức mạng dùng IPv6, cho phép quy định cơ chế đóng gói bản tin và nén header?",
+        options: [
+            "A. 6LoWPAN",
+            "B. Zigbee",
+            "C. Bluetooth",
+            "D. Z-wave"
+        ],
+        answer: "A. 6LoWPAN"
+    },
+    {
+        question: "Câu 33: Sóng WiFi truyền và phát tín hiệu ở tần số?",
+        options: [
+            "A. 1.4 GHz hoặc 2.3 GHz",
+            "B. 6 GHz hoặc 10 GHz",
+            "C. 15 GHz hoặc 30 GHz",
+            "D. 2.4 GHz hoặc 5 GHz"
+        ],
+        answer: "D. 2.4 GHz hoặc 5 GHz"
+    },
+    {
+        question: "Câu 34: NFC (Near-Field Communications) là công nghệ kết nối không dây trong phạm vi tầm ngắn trong khoảng cách",
+        options: [
+            "A. 4 cm",
+            "B. 15 cm",
+            "C. 20 cm",
+            "D. 25 cm"
+        ],
+        answer: "A. 4 cm"
+    },
+    {
+        question: "Câu 35: Đâu là công nghệ không dây sử dụng các bóng đèn LED để truyền dữ liệu với tốc độ nhanh hơn Wifi tới 100 lần?",
+        options: [
+            "A. LIFI",
+            "B. Sigfox",
+            "C. Neul",
+            "D. Thread"
+        ],
+        answer: "A. LIFI"
+    },
+    {
+        question: "Câu 36: Một cảm biến tốt tuân theo quy tắc nào?",
+        options: [
+            "A. Nó nhạy cảm với thuộc tính được đo lường",
+            "B. Nó không nhạy cảm đến bất kỳ thuộc tính nào khác có thể gặp trong ứng dụng của nó",
+            "C. Nó không ảnh hưởng đến thuộc tính được đo lường",
+            "D. Tất cả phương án"
+        ],
+        answer: "D. Tất cả phương án"
+    },
+    {
+        question: "Câu 37: Chip xử lý hình ảnh CCD viết tắt là gì?",
+        options: [
+            "A. Charge Coupled Device",
+            "B. Computer Controlled Display",
+            "C. Computer Crimes Divison",
+            "D. Coarse Control Damper"
+        ],
+        answer: "A. Charge Coupled Device"
+    },
+    {
+        question: "Câu 38: Chip xử lý hình ảnh CMOS viết tắt là gì?",
+        options: [
+            "A. Complementary Metal Oxide Semiconductor",
+            "B. Complementary Metal Oxide Silicon",
+            "C. Complementary Metal Oxide Substrate",
+            "D. Cargo Movement Operating System"
+        ],
+        answer: "A. Complementary Metal Oxide Semiconductor"
+    },
+    {
+        question: "Câu 39: Trong Cảm biến lực Loadcell, thành phần Strain gauge là gì?",
+        options: [
+            "A. Là một loại điện trở đặc biệt. Được cấp nguồn điện và giá trị điện trở thay đổi khi bị tác động lực lên nó",
+            "B. Là một thanh kim loại chịu tải có tính đàn hồi, thường là hợp kim nhôm",
+            "C. Là một hình thanh kim loại vòng tròn cố định trên thiết bị, có khả năng chịu tải tốt chuyên truyền điện và nhiệt",
+            "D. Không có đáp án đúng"
+        ],
+        answer: "A. Là một loại điện trở đặc biệt. Được cấp nguồn điện và giá trị điện trở thay đổi khi bị tác động lực lên nó"
+    },
+    {
+        question: "Câu 40: Trong Cảm biến lực Loadcell, thành phần thân loadcell là gì?",
+        options: [
+            "A. Là một thanh kim loại chịu tải có tính đàn hồi, thường là hợp kim nhôm",
+            "B. Là một loại điện trở đặc biệt. Được cấp nguồn điện và giá trị điện trở thay đổi khi bị tác động lực lên nó",
+            "C. Là một hình thanh kim loại vòng tròn cố định trên thiết bị, có khả năng chịu tải tốt chuyên truyền điện và nhiệt",
+            "D. Không có đáp án đúng"
+        ],
+        answer: "A. Là một thanh kim loại chịu tải có tính đàn hồi, thường là hợp kim nhôm"
+    },
+    {
+        question: "Câu 41: Cảm biến khói nào sử dụng các chất đồng vị phóng xạ để hoạt động?",
+        options: [
+            "A. (a) Cảm biến khói Ion hóa",
+            "B. (b) Cảm biến khói quang điện",
+            "C. Cả (a) và (b) đều đúng",
+            "D. Cả (a) và (b) đều sai"
+        ],
+        answer: "A. (a) Cảm biến khói Ion hóa"
+    },
+    {
+        question: "Câu 42: Cảm biến hồng ngoại thụ động có đặc điểm gì?",
+        options: [
+            "A. Chỉ phát hiện ra được bức xạ từ các vật thể khác như người, động vật hay nguồn nhiệt, chứ sẽ không phát ra tia hồng ngoại",
+            "B. Phát hiện mọi vật thể, với khoảng cách giới hạn",
+            "C. Khi vật thể đến gần với cảm biến, thiết bị sẽ phát ra ánh sáng hồng ngoại từ đèn Led và sẽ phản xạ vào vật thể trở lại mà người nhận có thể nhận thấy được",
+            "D. Không có đáp án đúng"
+        ],
+        answer: "A. Chỉ phát hiện ra được bức xạ từ các vật thể khác như người, động vật hay nguồn nhiệt, chứ sẽ không phát ra tia hồng ngoại"
+    },
+    {
+        question: "Câu 43: Light Sensor/Photoelectric Sensor là tên gọi của cảm biến nào?",
+        options: [
+            "A. Cảm biến chuyển động",
+            "B. Cảm biến hạt",
+            "C. Cảm biến rò rỉ",
+            "D. Cảm biến quang"
+        ],
+        answer: "D. Cảm biến quang"
+    },
+    {
+        question: "Câu 44: Đâu là ưu điểm của cảm biến hồng ngoại?",
+        options: [
+            "A. Có độ nhạy cao trong việc xác định vật thể phát ra bức xạ hồng ngoại trong không gian",
+            "B. Điều kiện nhiệt độ môi trường. Những môi trường có nhiệt độ cao thì cảm biến sẽ hoạt động hiệu quả",
+            "C. Phạm vi quét cảm biến hồng ngoại không có góc bị chết",
+            "D. Không bị nhầm lẫn khi phát hiện ra chuyển động"
+        ],
+        answer: "A. Có độ nhạy cao trong việc xác định vật thể phát ra bức xạ hồng ngoại trong không gian"
+    },
+    {
+        question: "Câu 45: Đâu là các hãng sản xuất hình ảnh?",
+        options: [
+            "A. AUTONICS",
+            "B. MISUMI",
+            "C. SUNX",
+            "D. Tất cả các ý trên"
+        ],
+        answer: "D. Tất cả các ý trên"
+    },
+    {
+        question: "Câu 46: Công nghệ nhiều lớp cho phép cung cấp, quản lý và tự động hóa đơn giản các thiết bị được kết nối trong IoT?",
+        options: [
+            "A. IoT Platform",
+            "B. Machine Learning (ML)",
+            "C. Artificial Intelligence (AI)",
+            "D. Robotic Process Automation (RPA)"
+        ],
+        answer: "A. IoT Platform"
+    },
+    {
+        question: "Câu 47: Cách thức truyền dữ liệu trong IoT là gì?",
+        options: [
+            "A. Blutooth",
+            "B. Zigbee",
+            "C. Z-wave",
+            "D. Tất cả đáp án"
+        ],
+        answer: "D. Tất cả đáp án"
+    },
+    {
+        question: "Câu 48: LoRaWAN là gì?",
+        options: [
+            "A. Giao thức truyền thông không dây cho IoT",
+            "B. Ngôn ngữ lập trình cho IoT",
+            "C. Công nghệ kết nối dữ liệu sản xuất",
+            "D. Màn hình cảm ứng cho IoT"
+        ],
+        answer: "A. Giao thức truyền thông không dây cho IoT"
+    },
+    {
+        question: "Câu 49: Mục đích chính của IoT là gì?",
+        options: [
+            "A. Kết nối các thiết bị và đối tượng để chia sẻ dữ liệu",
+            "B. Tạo ra một Internet mới dành riêng cho các thiết bị di động",
+            "C. Mở rộng sự phổ biến của trò chơi trực tuyến",
+            "D. Tăng cường an ninh mạng cho doanh nghiệp"
+        ],
+        answer: "A. Kết nối các thiết bị và đối tượng để chia sẻ dữ liệu"
+    },
+    {
+        question: "Câu 50: 5G là gì và vai trò của nó trong IoT là gì?",
+        options: [
+            "A. Một loại cảm biến tiên tiến được sử dụng trong IoT",
+            "B. Một dạng phân tích dữ liệu trong IoT",
+            "C. Một mô hình kinh doanh cho các ứng dụng IoT",
+            "D. Tiêu chuẩn kết nối không dây mới với tốc độ nhanh và độ trễ thấp, hỗ trợ việc triển khai IoT"
+        ],
+        answer: "D. Tiêu chuẩn kết nối không dây mới với tốc độ nhanh và độ trễ thấp, hỗ trợ việc triển khai IoT"
+    },
+    {
+        question: "Câu 51: Giao thức nào làm trung gian cho các gói tin trên lớp ứng dụng với mục đích thay thế các hệ thống truyền tin độc quyền và không tương thích trong IoT?",
+        options: [
+            "A. DDS",
+            "B. MQTT",
+            "C. CoAP",
+            "D. AMQP"
+        ],
+        answer: "D. AMQP"
+    },
+    {
+        question: "Câu 52: Hệ thống nhúng được hiểu như thế nào?",
+        options: [
+            "A. Là hệ thống tự trị các nhúng trong môi trường hoặc hệ thống mẹ",
+            "B. Là hệ thống kết hợp phần mềm và phần cứng để giải quyết các bài toán chuyên dụng",
+            "C. Là hệ thống có khả năng tự động hóa cao và hoạt động ổn định",
+            "D. Tất cả các phương án trên"
+        ],
+        answer: "D. Tất cả các phương án trên"
+    },
+    {
+        question: "Câu 53: Hệ thống nhúng được thiết kế để thực hiện nhiệm vụ chuyên dụng nào?",
+        options: [
+            "A. Đảm bảo tính an toàn và ứng dụng trong các lĩnh vực cụ thể",
+            "B. Tối ưu hóa hiệu suất và giảm thiểu chi phí sản xuất",
+            "C. Tăng cường tính linh hoạt và đa dạng của hệ thống",
+            "D. Tất cả các phương án trên"
+        ],
+        answer: "A. Đảm bảo tính an toàn và ứng dụng trong các lĩnh vực cụ thể"
+    },
+    {
+        question: "Câu 54: Đâu không phải là đặc điểm của hệ thống nhúng?",
+        options: [
+            "A. Tính tương tác và kết nối mạng lưới rộng lớn",
+            "B. Tính hoạt động ổn định và tự động hóa cao",
+            "C. Tính linh hoạt và đa dạng trong việc thực hiện các nhiệm vụ",
+            "D. Tính chuyên dụng, không phải là hệ thống máy tính đa chức năng"
+        ],
+        answer: "A. Tính tương tác và kết nối mạng lưới rộng lớn"
+    },
+    {
+        question: "Câu 55: IoT được hiểu như thế nào so với hệ thống nhúng?",
+        options: [
+            "A. IoT là một công nghệ độc lập, trong khi hệ thống nhúng là một phần của IoT",
+            "B. IoT là một hệ thống tổng hợp, trong khi hệ thống nhúng là một phần của hệ thống IoT",
+            "C. IoT là một công nghệ chủ đạo, trong khi hệ thống nhúng chủ yếu tập trung vào việc điều khiển các thiết bị trong một hệ thống cụ thể",
+            "D. IoT là một mạng lưới các thiết bị kết nối qua Internet, trong khi hệ thống nhúng là một tập hợp con của IoT"
+        ],
+        answer: "D. IoT là một mạng lưới các thiết bị kết nối qua Internet, trong khi hệ thống nhúng là một tập hợp con của IoT"
+    },
+    {
+        question: "Câu 56: Cảm biến quang loại nào sử dụng trong công nghiệp sản xuất và tự động hóa có khả năng phát hiện vật thể khá xa?",
+        options: [
+            "A. Cảm biến quang khuếch tán",
+            "B. Cảm biến quang hồng ngoại",
+            "C. Cảm biến gương phản xạ",
+            "D. Tầm xa đều như nhau"
+        ],
+        answer: "A. Cảm biến quang khuếch tán"
+    },
+    {
+        question: "Câu 57: Tổ chức hay ai là người sáng tạo ra Raspberry Pi?",
+        options: [
+            "A. Eben Upton",
+            "B. Sinh viên Hernando Barragan",
+            "C. Bởi hãng Espressif Systems",
+            "D. Google"
+        ],
+        answer: "A. Eben Upton"
+    },
+    {
+        question: "Câu 58: Tổ chức hay ai là người tham gia chính sáng tạo ra Adruino?",
+        options: [
+            "A. Sinh viên Hernando Barragan",
+            "B. Eben Upton",
+            "C. Bởi hãng Espressif Systems",
+            "D. Google"
+        ],
+        answer: "A. Sinh viên Hernando Barragan"
+    },
+    {
+        question: "Câu 59: Raspberry Pi dùng ngôn ngữ lập trình nào chính thức?",
+        options: [
+            "A. Python",
+            "B. Java",
+            "C. C#",
+            "D. Go"
+        ],
+        answer: "A. Python"
+    },
+    {
+        question: "Câu 60: Raspberry Pi hỗ trợ trên nền tảng và phần mềm nào?",
+        options: [
+            "A. Raspbian",
+            "B. Raspbmc",
+            "C. OSMC",
+            "D. Tất cả đáp án đều đúng"
+        ],
+        answer: "D. Tất cả đáp án đều đúng"
+    },
+        ],
+            "Phần 2 (20 Câu)": [
+    {
+        question: "Câu 1: Arduino đã chính thức được giới thiệu năm?",
+        options: [
+            "A. 2005",
+            "B. 2006",
+            "C. 2007",
+            "D. 2008"
+        ],
+        answer: "A. 2005"
+    },
+    {
+        question: "Câu 2: Arduino ra đời ở nước nào?",
+        options: [
+            "A. Ý",
+            "B. Pháp",
+            "C. Mỹ",
+            "D. Nga"
+        ],
+        answer: "A. Ý"
+    },
+    {
+        question: "Câu 3: Khi làm việc với UPnP, một thiết bị tự gán cái gì của chính nó?",
+        options: [
+            "A. Địa chỉ IP",
+            "B. Địa chỉ gửi thư",
+            "C. Địa chỉ doanh nghiệp",
+            "D. Địa chỉ UpnP"
+        ],
+        answer: "A. Địa chỉ IP"
+    },
+    {
+        question: "Câu 4: Dịch vụ nào đã được sử dụng làm mẫu thử các mối đe dọa của trung tâm điều khiển?",
+        options: [
+            "A. Amazon Echo",
+            "B. Apple Store",
+            "C. Google Play",
+            "D. Tất cả đáp án"
+        ],
+        answer: "A. Amazon Echo"
+    },
+    {
+        question: "Câu 5: Những thách thức lớn của IoT là gì?",
+        options: [
+            "A. An ninh và sự riêng tư",
+            "B. Không có gì cả",
+            "C. Chia sẻ thông tin",
+            "D. Nó rất dễ tạo và thực hiện"
+        ],
+        answer: "A. An ninh và sự riêng tư"
+    },
+    {
+        question: "Câu 6: Phát biểu đúng nhất về dữ liệu khi sử dụng IoT là gì?",
+        options: [
+            "A. Dữ liệu thu được theo thời gian thực",
+            "B. Dữ liệu thu được hạn chế",
+            "C. Dữ liệu thu được rất khó quan sát",
+            "D. Dữ liệu thu được rất khó phân tích"
+        ],
+        answer: "A. Dữ liệu thu được theo thời gian thực"
+    },
+    {
+        question: "Câu 7: Điều nào sau đây là nhược điểm của việc sử dụng IoT?",
+        options: [
+            "A. Chi phí quá đắt",
+            "B. Lối sống xấu đi",
+            "C. Năng suất không tăng",
+            "D. Quá phụ thuộc vào công nghệ"
+        ],
+        answer: "D. Quá phụ thuộc vào công nghệ"
+    },
+    {
+        question: "Câu 8: Ngôn ngữ ưa thích cho phân tích IoT là ngôn ngữ nào?",
+        options: [
+            "A. Python",
+            "B. HTML",
+            "C. PHP",
+            "D. C++"
+        ],
+        answer: "A. Python"
+    },
+    {
+        question: "Câu 9: Thành phần nào tham gia vận hành phần tử cốt lõi của IoT?",
+        options: [
+            "A. SaaS",
+            "B. PaaS",
+            "C. IaaS",
+            "D. Nhà cung cấp dịch vụ IoT"
+        ],
+        answer: "D. Nhà cung cấp dịch vụ IoT"
+    },
+    {
+        question: "Câu 10: Lợi thế nào không chính xác đối với IoT?",
+        options: [
+            "A. Bảo mật",
+            "B. Giảm thiểu lãng phí",
+            "C. Thu thập dữ liệu nâng cao",
+            "D. Cải thiện sự tham gia của khách hàng"
+        ],
+        answer: "A. Bảo mật"
+    },
+    {
+        question: "Câu 11: Bước cuối cùng của việc truyền dữ liệu đáng tin cậy là gì?",
+        options: [
+            "A. Khởi tạo",
+            "B. Chuyển tiếp tin nhắn",
+            "C. Phát hiện tin nhắn bị mất",
+            "D. Phục hồi có chọn lọc"
+        ],
+        answer: "D. Phục hồi có chọn lọc"
+    },
+    {
+        question: "Câu 12: Giao thức được sử dụng để liên kết tất cả các thiết bị trong IoT?",
+        options: [
+            "A. Mạng",
+            "B. UDP",
+            "C. HTTP",
+            "D. TCP/IP"
+        ],
+        answer: "D. TCP/IP"
+    },
+    {
+        question: "Câu 13: Arduino IDE được viết bằng ngôn ngữ lập trình nào?",
+        options: [
+            "A. C/C++",
+            "B. Java",
+            "C. JavaScript",
+            "D. Python"
+        ],
+        answer: "A. C/C++"
+    },
+    {
+        question: "Câu 14: Mạng IoT có phạm vi ngắn nhất là mạng nào trong các mạng sau?",
+        options: [
+            "A. SigFox",
+            "B. LPWAN",
+            "C. Short network",
+            "D. Short-range wireless network"
+        ],
+        answer: "D. Short-range wireless network"
+    },
+    {
+        question: "Câu 15: Giao thức nhẹ (lightweight protocol) là giao thức nào trong số các giao thức sau?",
+        options: [
+            "A. IP",
+            "B. CoAP",
+            "C. HTTP",
+            "D. MQTT"
+        ],
+        answer: "D. MQTT"
+    },
+    {
+        question: "Câu 16: Công nghệ nào sau đây không phải là công nghệ ở lớp liên kết dữ liệu?",
+        options: [
+            "A. HTTP",
+            "B. UART",
+            "C. wifi",
+            "D. Bluetooth"
+        ],
+        answer: "A. HTTP"
+    },
+    {
+        question: "Câu 17: MQTT dựa trên kiến trúc nào?",
+        options: [
+            "A. Publish-subscribe architecture",
+            "B. Client-server architecture",
+            "C. Peer-to-peer architecture",
+            "D. Request-responde architecture"
+        ],
+        answer: "A. Publish-subscribe architecture"
+    },
+    {
+        question: "Câu 18: Thuật ngữ LPWAN là viết tắt của những chữ nào?",
+        options: [
+            "A. Low Power Wide Area Network",
+            "B. Low Protocol Wide Area Network",
+            "C. Long Power Wide Area Network",
+            "D. Long Protocol Wide Area Network"
+        ],
+        answer: "A. Low Power Wide Area Network"
+    },
+    {
+        question: "Câu 19: Mô hình mạng sử dụng cho ZigBee Smart Energy?",
+        options: [
+            "A. Star Topology",
+            "B. Bus Topology",
+            "C. Ring Topology",
+            "D. Không cần mô hình"
+        ],
+        answer: "A. Star Topology"
+    },
+    {
+        question: "Câu 20: Công nghệ cảm biến hình ảnh nào cần ít điện năng hơn?",
+        options: [
+            "A. CMOS",
+            "B. CCD",
+            "C. ADC",
+            "D. Nikon Coolpix"
+        ],
+        answer: "A. CMOS"
+    },
+            ],
+            "Phần 3 (20 Câu)": [
+    {
+        question: "Câu 1: Arduino Uno R3 dùng vi điều khiển gì?",
+        options: [
+            "A. Atmega 328",
+            "B. Quad core Cortex-A72",
+            "C. Intel® Atom ™ SoC",
+            "D. Tensilica Diamond Standard 106Micro"
+        ],
+        answer: "A. Atmega 328"
+    },
+    {
+        question: "Câu 2: Raspberry Pi 4 Model B dùng vi điều khiển gì?",
+        options: [
+            "A. Quad core Cortex-A72",
+            "B. Atmega 328",
+            "C. Intel® Atom ™ SoC",
+            "D. Tensilica Diamond Standard 106Micro"
+        ],
+        answer: "A. Quad core Cortex-A72"
+    },
+    {
+        question: "Câu 3: Cổng bảo mật tiêu chuẩn của MQTT là cổng nào?",
+        options: [
+            "A. 8000",
+            "B. 8888",
+            "C. 1883",
+            "D. 8883"
+        ],
+        answer: "D. 8883"
+    },
+    {
+        question: "Câu 4: Phạm vi của z-wave có khoảng cách là bao nhiêu mét?",
+        options: [
+            "A. 30-100m",
+            "B. 300-1000 m",
+            "C. <10m",
+            "D. 100-1000m"
+        ],
+        answer: "A. 30-100m"
+    },
+    {
+        question: "Câu 5: Tần số của z-wave là bao nhiêu GHz?",
+        options: [
+            "A. 708,49 GHz",
+            "B. 888,42 GHz",
+            "C. 928,49 GHz",
+            "D. 908,42GHz"
+        ],
+        answer: "D. 908,42GHz"
+    },
+    {
+        question: "Câu 6: I2C là viết tắt của những chữ nào?",
+        options: [
+            "A. Inter-Integrated Communication",
+            "B. Internet Integrated Communication",
+            "C. Integrated Internet Communication",
+            "D. Internet Instigate Communication"
+        ],
+        answer: "A. Inter-Integrated Communication"
+    },
+    {
+        question: "Câu 7: Thiết bị nào không phải thiết bị truyền động (actuator) trong IoT?",
+        options: [
+            "A. Stepper motor",
+            "B. Celling fan",
+            "C. RGB LED",
+            "D. Raspberry Pi"
+        ],
+        answer: "D. Raspberry Pi"
+    },
+    {
+        question: "Câu 8: Giao thức nào không tồn tại trong tầng liên kết dữ liệu (data link)?",
+        options: [
+            "A. ZigBee Smart Energy",
+            "B. LoRaWAN",
+            "C. WirelessHART",
+            "D. Secure MQTT"
+        ],
+        answer: "D. Secure MQTT"
+    },
+    {
+        question: "Câu 9: NFC có thể truyền dữ liệu ở tốc độ nào?",
+        options: [
+            "A. 424 Kb/giây",
+            "B. 848 Kb/giây",
+            "C. 216 Kb/giâ",
+            "D. Tất cả các phương án trên"
+        ],
+        answer: "D. Tất cả các phương án trên"
+    },
+    {
+        question: "Câu 10: Phạm vi của Bluetooth 4.2?",
+        options: [
+            "A. 50m-150m",
+            "B. 1m-20m",
+            "C. 20m-40m",
+            "D. 300m - 500m"
+        ],
+        answer: "A. 50m-150m"
+    },
+            ],
+                };
+        const originalQuizData = JSON.parse(JSON.stringify(quizData)); // Lưu dữ liệu gốc
+        let savedQuizState = null; // Store the quiz state before retrying wrong questions
+
+        // Audio objects
+        const correctSound = document.getElementById('correct-sound');
+        const incorrectSound = document.getElementById('incorrect-sound');
+
+        let currentSection = "";
+        let currentQuestionIndex = 0;
+        let userAnswersPerSection = {}; // Store answers per section
+        let autoNextTimer = null;
+        let startTime = null;
+        let timerInterval = null;
+        let isMuted = false; // Trạng thái âm thanh
+        let wrongQuestions = []; // Danh sách các câu đã làm sai
+
+        // Dark mode functionality
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const body = document.body;
+
+        // Load saved theme preference
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            darkModeToggle.textContent = 'Tắt Dark Mode';
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            const isDarkMode = body.classList.contains('dark-mode');
+            darkModeToggle.textContent = isDarkMode ? 'Tắt Dark Mode' : 'Bật Dark Mode';
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        });
+
+        // Timer functionality
+        function startTimer() {
+            startTime = new Date();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - startTime;
+            const hours = Math.floor(diff / 3600000);
+            const minutes = Math.floor((diff % 3600000) / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            document.getElementById('timer').textContent = `Thời gian: ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        // Score functionality
+        function calculateTotalQuestions() {
+            return Object.values(quizData).reduce((total, section) => total + section.length, 0);
+        }
+
+        function calculateScore() {
+            let totalCorrect = 0;
+            let totalQuestions = 0;
+            for (const section in quizData) {
+                const answers = userAnswersPerSection[section] || {};
+                const questions = quizData[section] || [];
+                totalQuestions += questions.length;
+                questions.forEach((_, index) => {
+                    if (answers[index] && answers[index].isCorrect) {
+                        totalCorrect++;
+                    }
+                });
+            }
+            const score = totalQuestions ? (totalCorrect / totalQuestions) * 10 : 0;
+            return { totalCorrect, totalQuestions, score: score.toFixed(2).replace('.', ',') };
+        }
+
+        function displayScore() {
+            stopTimer();
+            const { totalCorrect, totalQuestions, score } = calculateScore();
+            document.getElementById('score').textContent = `Điểm: ${score}/10`;
+        }
+
+        function checkCompletion() {
+            const totalQuestions = calculateTotalQuestions();
+            const completedCount = Object.values(userAnswersPerSection).reduce((sum, answers) => sum + Object.keys(answers).length, 0);
+            return completedCount === totalQuestions;
+        }
+
+        // Hàm cập nhật danh sách câu sai
+        function updateWrongQuestionsList() {
+            wrongQuestions = [];
+            for (const section in quizData) {
+                const questions = quizData[section];
+                const answers = userAnswersPerSection[section] || {};
+                questions.forEach((_, index) => {
+                    if (answers[index] && answers[index].isCorrect === false) {
+                        wrongQuestions.push({
+                            section: section,
+                            index: index,
+                            question: questions[index].question
+                        });
+                    }
+                });
+            }
+            return wrongQuestions;
+        }
+
+        // Hàm kiểm tra xem có câu nào sai không
+        function hasWrongAnswers() {
+            for (const section in userAnswersPerSection) {
+                for (const index in userAnswersPerSection[section]) {
+                    if (userAnswersPerSection[section][index].isCorrect === false) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function showCongratsModal() {
+            const modal = document.getElementById('congrats-modal');
+            const finalScore = document.getElementById('final-score');
+            const finalTime = document.getElementById('final-time');
+            const { score } = calculateScore();
+            const timerText = document.getElementById('timer').textContent;
+
+            finalScore.textContent = `${score}/10`;
+            finalTime.textContent = timerText.replace('Thời gian: ', '');
+            modal.style.display = 'flex';
+
+            // Đóng modal khi nhấn nút đóng
+            document.getElementById('close-modal').onclick = () => {
+                modal.style.display = 'none';
+            };
+
+            // Xem lại bài làm
+            document.getElementById('review-btn').onclick = () => {
+                modal.style.display = 'none';
+            };
+
+            // Làm lại bài thi
+            document.getElementById('restart-btn').onclick = () => {
+                modal.style.display = 'none';
+                document.getElementById('reload-btn').click();
+            };
+
+            // Đóng modal khi nhấn bên ngoài
+            window.onclick = (event) => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            };
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initSections();
+            initEventListeners();
+            updateTOC();
+            startTimer();
+            const totalQuestions = calculateTotalQuestions();
+            document.querySelectorAll('#total-questions').forEach(el => el.textContent = totalQuestions);
+        });
+
+        function initSections() {
+            const sectionsContainer = document.querySelector('.sections');
+            for (const section in quizData) {
+                const sectionBtn = document.createElement('button');
+                sectionBtn.className = 'section-btn';
+                sectionBtn.textContent = section;
+                sectionBtn.dataset.section = section;
+                sectionsContainer.appendChild(sectionBtn);
+            }
+            if (Object.keys(quizData).length > 0) {
+                currentSection = Object.keys(quizData)[0];
+                userAnswersPerSection[currentSection] = userAnswersPerSection[currentSection] || {};
+                document.querySelector(`.section-btn[data-section="${currentSection}"]`).classList.add('active');
+                loadSection(currentSection);
+            }
+        }
+
+        function initEventListeners() {
+            // Remove existing listeners to prevent duplication
+            const sectionButtons = document.querySelectorAll('.section-btn');
+            sectionButtons.forEach(btn => {
+                btn.removeEventListener('click', handleSectionClick);
+                btn.addEventListener('click', handleSectionClick);
+            });
+
+            function handleSectionClick() {
+                document.querySelector('.section-btn.active')?.classList.remove('active');
+                this.classList.add('active');
+                userAnswersPerSection[currentSection].currentQuestionIndex = currentQuestionIndex;
+                currentSection = this.dataset.section;
+                userAnswersPerSection[currentSection] = userAnswersPerSection[currentSection] || {};
+                currentQuestionIndex = userAnswersPerSection[currentSection].currentQuestionIndex || 0;
+                loadSection(currentSection);
+                updateTOC();
+            }
+
+            document.getElementById('prev-btn').removeEventListener('click', prevQuestion);
+            document.getElementById('prev-btn').addEventListener('click', prevQuestion);
+            document.getElementById('next-btn').removeEventListener('click', nextQuestion);
+            document.getElementById('next-btn').addEventListener('click', nextQuestion);
+            document.getElementById('toc-prev').removeEventListener('click', prevTOCPage);
+            document.getElementById('toc-prev').addEventListener('click', prevTOCPage);
+            document.getElementById('toc-next').removeEventListener('click', nextTOCPage);
+            document.getElementById('toc-next').addEventListener('click', nextTOCPage);
+            document.getElementById('submit-btn').removeEventListener('click', handleSubmit);
+            document.getElementById('submit-btn').addEventListener('click', handleSubmit);
+            document.getElementById('mute-btn').removeEventListener('click', toggleMute);
+            document.getElementById('mute-btn').addEventListener('click', toggleMute);
+            document.getElementById('retry-wrong-btn').removeEventListener('click', handleRetryWrong);
+            document.getElementById('retry-wrong-btn').addEventListener('click', handleRetryWrong);
+
+            function handleSubmit() {
+                if (!checkCompletion()) {
+                    if (confirm('Bạn chưa hoàn thành hết các câu hỏi. Bạn có chắc muốn nộp bài không?')) {
+                        displayScore();
+                        showCongratsModal();
+                    }
+                } else {
+                    displayScore();
+                    showCongratsModal();
+                }
+            }
+
+            function toggleMute() {
+                isMuted = !isMuted;
+                document.getElementById('mute-btn').textContent = isMuted ? 'Bật tiếng' : 'Tắt tiếng';
+            }
+
+            function handleRetryWrong() {
+                updateWrongQuestionsList();
+                if (wrongQuestions.length === 0) {
+                    alert('Bạn chưa có câu nào làm sai hoặc chưa làm câu nào!');
+                    return;
+                }
+                if (confirm(`Bạn có muốn làm lại ${wrongQuestions.length} câu đã làm sai không?`)) {
+                    // Save current quiz state
+                    savedQuizState = {
+                        quizData: JSON.parse(JSON.stringify(quizData)),
+                        userAnswersPerSection: JSON.parse(JSON.stringify(userAnswersPerSection)),
+                        currentSection: currentSection,
+                        currentQuestionIndex: currentQuestionIndex
+                    };
+
+                    // Prepare retry data
+                    const retryQuizData = {};
+                    retryQuizData["Câu sai"] = wrongQuestions.map(item => {
+                        return savedQuizState.quizData[item.section][item.index];
+                    });
+                    userAnswersPerSection["Câu sai"] = {};
+
+                    // Update quiz data
+                    Object.keys(quizData).forEach(key => delete quizData[key]);
+                    Object.assign(quizData, retryQuizData);
+
+                    // Update UI
+                    currentSection = "Câu sai";
+                    currentQuestionIndex = 0;
+                    const sectionsContainer = document.querySelector('.sections');
+                    sectionsContainer.innerHTML = '';
+
+                    // Add retry section button
+                    const sectionBtn = document.createElement('button');
+                    sectionBtn.className = 'section-btn active';
+                    sectionBtn.textContent = "Câu sai";
+                    sectionBtn.dataset.section = "Câu sai";
+                    sectionsContainer.appendChild(sectionBtn);
+
+                    // Add back button
+                    const backBtn = document.createElement('button');
+                    backBtn.className = 'section-btn';
+                    backBtn.textContent = "Quay lại bài test";
+                    backBtn.style.backgroundColor = "#ff9800";
+                    backBtn.addEventListener('click', () => {
+                        if (savedQuizState) {
+                            // Restore saved state
+                            Object.keys(quizData).forEach(key => delete quizData[key]);
+                            Object.assign(quizData, JSON.parse(JSON.stringify(savedQuizState.quizData)));
+                            Object.keys(userAnswersPerSection).forEach(key => delete userAnswersPerSection[key]);
+                            Object.assign(userAnswersPerSection, JSON.parse(JSON.stringify(savedQuizState.userAnswersPerSection)));
+                            currentSection = savedQuizState.currentSection;
+                            currentQuestionIndex = savedQuizState.currentQuestionIndex;
+
+                            // Rebuild section buttons
+                            sectionsContainer.innerHTML = '';
+                            for (const section in quizData) {
+                                const btn = document.createElement('button');
+                                btn.className = 'section-btn';
+                                if (section === currentSection) btn.classList.add('active');
+                                btn.textContent = section;
+                                btn.dataset.section = section;
+                                sectionsContainer.appendChild(btn);
+                            }
+
+                            // Reinitialize only section button listeners
+                            document.querySelectorAll('.section-btn').forEach(btn => {
+                                btn.removeEventListener('click', handleSectionClick);
+                                btn.addEventListener('click', handleSectionClick);
+                            });
+
+                            loadSection(currentSection);
+                            updateTOC();
+                        }
+                    });
+                    sectionsContainer.appendChild(backBtn);
+
+                    loadSection(currentSection);
+                    updateTOC();
+                }
+            }
+        }
+
+        function loadSection(section) {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+            quizContainer.classList.add('active');
+            if (quizData[section] && quizData[section].length > 0) {
+                const totalQuestions = calculateTotalQuestions();
+                document.getElementById('total-questions').textContent = totalQuestions;
+                updateQuestionDisplay();
+            }
+        }
+
+        function updateQuestionDisplay() {
+            clearTimeout(autoNextTimer);
+            const quizContainer = document.getElementById('quiz-container');
+            const questions = quizData[currentSection];
+            const question = questions[currentQuestionIndex];
+
+            quizContainer.innerHTML = `
+                <div class="question">
+                    <div class="question-text">${question.question}</div>
+                    <div class="options" id="options-container">
+                        ${question.options.map((option, index) => `
+                            <div class="option" data-option="${option}">
+                                <input type="radio" name="answer" id="option-${index}" value="${option}">
+                                <label for="option-${index}">${option}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="show-answer" id="show-answer"></div>
+                </div>
+            `;
+
+            const userAnswers = userAnswersPerSection[currentSection];
+            const hasAnswered = userAnswers && userAnswers[currentQuestionIndex];
+
+            if (hasAnswered) {
+                const selected = userAnswers[currentQuestionIndex].answer;
+                const selectedOption = document.querySelector(`input[value="${selected}"]`);
+                if (selectedOption) {
+                    selectedOption.checked = true;
+                    checkAnswer(selected, true);
+                    // Disable all options since an answer has been selected
+                    document.querySelectorAll('.option').forEach(option => {
+                        option.classList.add('disabled');
+                        option.querySelector('input').disabled = true;
+                    });
+                }
+            } else {
+                // Add click event listeners only if no answer has been selected
+                document.querySelectorAll('.option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        const radio = this.querySelector('input');
+                        radio.checked = true;
+                        checkAnswer(radio.value);
+                        // Disable all options after selection
+                        document.querySelectorAll('.option').forEach(opt => {
+                            opt.classList.add('disabled');
+                            opt.querySelector('input').disabled = true;
+                        });
+                    }, { once: true }); // Use { once: true } to ensure the listener is removed after first click
+                });
+            }
+
+            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+            document.getElementById('next-btn').disabled = currentQuestionIndex === questions.length - 1;
+            updateProgress();
+            updateTOC();
+        }
+
+        function checkAnswer(selectedAnswer, isRestoring = false) {
+            const questions = quizData[currentSection];
+            const question = questions[currentQuestionIndex];
+            const options = document.querySelectorAll('.option');
+            const showAnswer = document.getElementById('show-answer');
+
+            userAnswersPerSection[currentSection][currentQuestionIndex] = {
+                answer: selectedAnswer,
+                isCorrect: selectedAnswer === question.answer
+            };
+
+            options.forEach(option => {
+                const optionText = option.dataset.option;
+                option.classList.remove('correct', 'incorrect');
+                if (optionText === question.answer) {
+                    option.classList.add('correct');
+                } else if (optionText === selectedAnswer && selectedAnswer !== question.answer) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            if (!isRestoring) {
+                if (selectedAnswer === question.answer && !isMuted) {
+                    correctSound.play().catch(e => console.error("Error playing correct sound:", e));
+                } else if (selectedAnswer !== question.answer && !isMuted) {
+                    incorrectSound.play().catch(e => console.error("Error playing incorrect sound:", e));
+                    showAnswer.textContent = `Đáp án đúng: ${question.answer}`;
+                    showAnswer.style.display = 'block';
+                }
+            } else {
+                showAnswer.style.display = 'none';
+            }
+
+            updateProgress();
+            updateTOC();
+            updateWrongQuestionsList();
+            // Auto-advance to next question after 2 seconds if not the last question
+            if (!isRestoring && currentQuestionIndex < quizData[currentSection].length - 1) {
+                autoNextTimer = setTimeout(() => {
+                    currentQuestionIndex++;
+                    updateQuestionDisplay();
+                }, 2000);
+            }
+        }
+
+        function updateProgress() {
+            const answers = userAnswersPerSection[currentSection] || {};
+            let correct = 0;
+            let incorrect = 0;
+            const questions = quizData[currentSection] || [];
+            let completed = 0;
+
+            questions.forEach((_, index) => {
+                if (answers[index]) {
+                    completed++;
+                    if (answers[index].isCorrect) correct++;
+                    else incorrect++;
+                }
+            });
+
+            document.getElementById('completed-count').textContent = completed;
+            document.getElementById('total-questions').textContent = calculateTotalQuestions();
+            document.getElementById('correct-count').textContent = correct;
+            document.getElementById('incorrect-count').textContent = incorrect;
+
+            const percent = calculateTotalQuestions() ? Math.round((completed / calculateTotalQuestions()) * 100) : 0;
+            document.getElementById('progress-bar').style.width = percent + '%';
+            document.getElementById('progress-percent').textContent = percent + '%';
+        }
+
+        function prevQuestion() {
+            clearTimeout(autoNextTimer);
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                updateQuestionDisplay();
+            }
+        }
+
+        function nextQuestion() {
+            clearTimeout(autoNextTimer);
+            const questions = quizData[currentSection];
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                updateQuestionDisplay();
+            }
+        }
+
+        document.getElementById('reload-btn').addEventListener('click', () => {
+            if (!quizData[currentSection]) return;
+            const shuffleArray = (arr) => {
+                const shuffled = [...arr];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+                return shuffled;
+            };
+            userAnswersPerSection = {};
+            stopTimer();
+            startTimer();
+            for (const section in quizData) {
+                quizData[section] = JSON.parse(JSON.stringify(originalQuizData[section]));
+            }
+            if (document.getElementById('shuffle-questions').checked) {
+                for (const section in quizData) {
+                    quizData[section] = shuffleArray(quizData[section]);
+                }
+            }
+            if (document.getElementById('shuffle-answers').checked) {
+                for (const section in quizData) {
+                    quizData[section].forEach(q => {
+                        q.options = shuffleArray(q.options);
+                    });
+                }
+            }
+            currentSection = Object.keys(quizData)[0];
+            currentQuestionIndex = 0;
+            userAnswersPerSection[currentSection] = userAnswersPerSection[currentSection] || {};
+            document.querySelector(`.section-btn[data-section="${currentSection}"]`)?.classList.add('active');
+            document.getElementById('score').textContent = 'Điểm: Chưa nộp bài';
+            loadSection(currentSection);
+            updateTOC();
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight') {
+                const nextBtn = document.getElementById('next-btn');
+                if (nextBtn && !nextBtn.disabled) {
+                    nextBtn.click();
+                }
+            } else if (event.key === 'ArrowLeft') {
+                const prevBtn = document.getElementById('prev-btn');
+                if (prevBtn && !prevBtn.disabled) {
+                    prevBtn.click();
+                }
+            }
+        });
+
+        let tocPage = 0;
+        const tocItemsPerPage = 42;
+
+        function updateTOC() {
+            const toc = document.getElementById('toc');
+            const questions = quizData[currentSection] || [];
+            const answers = userAnswersPerSection[currentSection] || {};
+            toc.innerHTML = '';
+            const start = tocPage * tocItemsPerPage;
+            const end = start + tocItemsPerPage;
+            const paginatedQuestions = questions.slice(start, end);
+            paginatedQuestions.forEach((_, index) => {
+                const globalIndex = start + index;
+                const item = document.createElement('div');
+                item.className = 'toc-item';
+                item.textContent = globalIndex + 1;
+                if (answers[globalIndex]) {
+                    if (answers[globalIndex].isCorrect) {
+                        item.classList.add('green');
+                    } else {
+                        item.classList.add('red');
+                    }
+                } else if (globalIndex === currentQuestionIndex) {
+                    item.classList.add('blue');
+                }
+                item.addEventListener('click', () => {
+                    currentQuestionIndex = globalIndex;
+                    updateQuestionDisplay();
+                });
+                toc.appendChild(item);
+            });
+            document.getElementById('toc-prev').disabled = tocPage === 0;
+            document.getElementById('toc-next').disabled = end >= questions.length;
+        }
+
+        function prevTOCPage() {
+            if (tocPage > 0) {
+                tocPage--;
+                updateTOC();
+            }
+        }
+
+        function nextTOCPage() {
+            const questions = quizData[currentSection] || [];
+            if ((tocPage + 1) * tocItemsPerPage < questions.length) {
+                tocPage++;
+                updateTOC();
+            }
+        }
+    </script>
+</body>
+</html>
