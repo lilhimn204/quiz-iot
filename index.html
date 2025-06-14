@@ -1815,26 +1815,30 @@
         }
 
         function updateProgress() {
-            const answers = userAnswersPerSection[currentSection] || {};
             let correct = 0;
             let incorrect = 0;
-            const questions = quizData[currentSection] || [];
             let completed = 0;
+            const totalQuestions = calculateTotalQuestions();
 
-            questions.forEach((_, index) => {
-                if (answers[index]) {
-                    completed++;
-                    if (answers[index].isCorrect) correct++;
-                    else incorrect++;
-                }
-            });
+            // Calculate progress across all sections
+            for (const section in quizData) {
+                const answers = userAnswersPerSection[section] || {};
+                const questions = quizData[section] || [];
+                questions.forEach((_, index) => {
+                    if (answers[index]) {
+                        completed++;
+                        if (answers[index].isCorrect) correct++;
+                        else incorrect++;
+                    }
+                });
+            }
 
             document.getElementById('completed-count').textContent = completed;
-            document.getElementById('total-questions').textContent = calculateTotalQuestions();
+            document.getElementById('total-questions').textContent = totalQuestions;
             document.getElementById('correct-count').textContent = correct;
             document.getElementById('incorrect-count').textContent = incorrect;
 
-            const percent = calculateTotalQuestions() ? Math.round((completed / calculateTotalQuestions()) * 100) : 0;
+            const percent = totalQuestions ? Math.round((completed / totalQuestions) * 100) : 0;
             document.getElementById('progress-bar').style.width = percent + '%';
             document.getElementById('progress-percent').textContent = percent + '%';
         }
